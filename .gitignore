@@ -1,0 +1,17 @@
+.DS_Store
+__pycache__/
+*.pyc
+
+# Large generated/binary production assets (kept locally, not in git)
+books/art/
+books/archive/
+books/builds/
+books/print-masters/
+books/kdp-packages/
+scratch/
+
+# Website scratch
+website/.work/
+website/.artifacts/
+website/.openai/
+firebase-debug.log
