@@ -1,5 +1,8 @@
 {
   "projects": {
-    "default": "acornoodle-books"
+    "default": "acornoodle-books-dev",
+    "development": "acornoodle-books-dev",
+    "staging": "acornoodle-books-staging",
+    "production": "acornoodle-books-prod"
   }
 }
