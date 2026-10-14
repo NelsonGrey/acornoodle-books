@@ -1,0 +1,12 @@
+html.auth-required:not(.auth-granted) body > :not(#auth-gate) { display: none !important; }
+#auth-gate { position: fixed; inset: 0; z-index: 10000; display: grid; place-items: center; padding: 1.5rem; background: #dff4fb; color: #57220f; font-family: "Nunito", system-ui, sans-serif; }
+.auth-gate-card { width: min(100%, 460px); padding: clamp(2rem, 6vw, 3.5rem); border: 3px solid #57220f; border-radius: 28px; background: #fff; box-shadow: 10px 10px 0 #f5ae27; text-align: center; }
+.auth-gate-card img { width: min(220px, 70%); height: auto; margin-bottom: 1.5rem; }
+.auth-gate-label { margin: 0 0 .6rem; font-size: .75rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: #219bd4; }
+.auth-gate-card h1 { margin: 0 0 1rem; font: 800 clamp(2rem, 7vw, 2.75rem)/1.05 "Baloo 2", "Nunito", sans-serif; }
+.auth-gate-card p { line-height: 1.55; }
+.auth-gate-button { width: 100%; margin-top: 1rem; padding: .9rem 1.25rem; border: 0; border-radius: 999px; background: #d91650; color: #fff; font: 800 1rem "Nunito", sans-serif; cursor: pointer; }
+.auth-gate-button:hover { background: #b50f40; }
+.auth-gate-button:disabled { opacity: .55; cursor: wait; }
+.auth-gate-error { min-height: 1.5em; margin-top: 1rem; color: #a52d19; font-size: .9rem; font-weight: 700; }
+.auth-revoke { position: fixed; right: 1rem; bottom: 1rem; z-index: 10001; padding: .5rem .85rem; border: 2px solid #57220f; border-radius: 999px; background: #fff; color: #57220f; font: 700 .75rem "Nunito", sans-serif; cursor: pointer; }
