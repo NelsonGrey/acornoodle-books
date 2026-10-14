@@ -1,0 +1,4 @@
+# Dependencies for books/scripts (Python 3.11+)
+reportlab>=4.0
+Pillow>=10.0
+pypdf>=4.0
