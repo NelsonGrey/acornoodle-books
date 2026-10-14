@@ -1,54 +1,208 @@
-# Acornoodle Books Publishing Project
+# Acornoodle Books
+
+[![Deploy Website](https://github.com/NelsonGrey/acornoodle-books/actions/workflows/deploy-website.yml/badge.svg)](https://github.com/NelsonGrey/acornoodle-books/actions/workflows/deploy-website.yml)
+![License: Proprietary](https://img.shields.io/badge/license-proprietary-lightgrey)
 
 **Acornoodle Books** is the consumer-facing children's publishing imprint of **Nelson Grey LLC**. **Mark Nelson** is the author of the current books.
 
+This repository holds everything for the imprint: the coloring-book production pipeline, the public website, the shared brand system, and the business documents.
+
+| Environment | Branch | Firebase project | URL |
+| --- | --- | --- | --- |
+| Development | `develop` | `acornoodle-books-dev` | https://acornoodle-books-dev.web.app |
+| Staging | `staging` | `acornoodle-books-staging` | https://acornoodle-books-staging.web.app |
+| Production | `main` | `acornoodle-books-prod` | https://acornoodle-books-prod.web.app |
+
+## Contents
+
+- [Current series](#current-series)
+- [Repository layout](#repository-layout)
+- [Getting started](#getting-started)
+- [Book production](#book-production)
+- [Website](#website)
+- [Deployment](#deployment)
+- [Branching and releases](#branching-and-releases)
+- [Brand](#brand)
+- [Documentation](#documentation)
+- [Contributing, security, and support](#contributing-security-and-support)
+- [License](#license)
+
 ## Current series
 
-**Acornoodle Discovery Coloring Books** is an unordered series for children ages 5–9.
+**Acornoodle Discovery Coloring Books** is an unordered series for children ages 5–9. Each title has 26 illustrated subjects with names and short facts, grouped into six themes with two titles each:
+
+| Theme | Titles |
+| --- | --- |
+| Bugs | Crawling Bugs, Flying Bugs |
+| Birds | Singing Birds, Soaring Birds |
+| Fish | Schools of Fish, Lonely Fish |
+| Dinosaurs | Roaring Dinosaurs, Sleepy Dinosaurs |
+| Farm animals | Busy Farm Animals, Cuddly Farm Animals |
+| Vehicles | Working Vehicles, Racing Vehicles |
+
+**Launch titles** (KDP-ready): Crawling Bugs, Roaring Dinosaurs, and Working Vehicles.
 
 ## Repository layout
 
-| Folder | Initiative | Contents |
-| --- | --- | --- |
-| `books/` | Coloring books (KDP) | Everything for producing the books (see below) |
-| `website/` | Acornoodle Books website | Own git repo; `dist/` is the deployed static site |
-| `brand/` | Shared brand | `acornoodle/` source assets, `proofs/` review images, brand-kit zip |
-| `docs/` | Business | Business plan, brand/name screening, marketing, product development |
-| `scratch/` | Throwaway | Review renders and contact sheets; safe to delete |
+```
+acornoodle-books/
+├── books/              Coloring-book initiative (KDP)
+│   ├── scripts/            Build scripts
+│   ├── prompts/            Art prompt manifests (CSV)
+│   ├── art/                Source art            (local only, not in git)
+│   ├── print-masters/      Working print masters (local only)
+│   ├── builds/             Intermediate builds   (local only)
+│   ├── kdp-packages/       Canonical upload ZIPs (local only)
+│   └── archive/            Superseded work       (local only)
+├── website/            Public website
+│   └── dist/               Static site deployed to Firebase Hosting
+├── brand/              Shared brand system
+│   ├── acornoodle/         Logos, mascot, BRAND-GUIDE.md
+│   └── proofs/             Review images
+├── docs/               Business plan, brand/name screening, marketing, product development
+├── scratch/            Throwaway review renders      (local only)
+├── .github/            Workflows, issue/PR templates, CODEOWNERS, Dependabot
+├── firebase.json       Default Firebase Hosting config (serves website/dist)
+├── firebase.{dev,staging,prod}.json  Per-environment hosting configs
+└── .firebaserc         Firebase project aliases
+```
 
-### `books/`
+> **Local-only folders.** Source art, print masters, KDP packages, builds, archive, and scratch are several GB of PDFs and images. They are listed in [.gitignore](.gitignore) and are **not** in GitHub, which rejects files over 100 MB. Keep a backup of them outside this repository.
 
-- `scripts/` — build scripts (run from anywhere; paths resolve from the repo root)
-- `prompts/` — art prompt manifests
-- `art/` — source art: `interior-v2/`, `cover-v3/`, `cover-v3-print/`, `print-art/`
-- `print-masters/` — working print masters per title
-- `builds/` — generated intermediate builds (`final-kids-v3/`)
-- `kdp-packages/` — **canonical upload packages** (below)
-- `archive/` — superseded work (v1 art, v2 builds, pre-Acornoodle PDFs); not upload sources
+## Getting started
 
-## Canonical KDP packages
+### Prerequisites
+
+| Tool | Used for |
+| --- | --- |
+| Python 3.11+ | Book build scripts |
+| Node.js + [Firebase CLI](https://firebase.google.com/docs/cli) (`npm i -g firebase-tools`) | Previewing and deploying the website |
+| [GitHub CLI](https://cli.github.com/) (optional) | Repo administration |
+| macOS | Scripts load Arial from `/System/Library/Fonts/Supplemental/`; on other systems, change the font paths |
+
+### Setup
+
+```bash
+git clone https://github.com/NelsonGrey/acornoodle-books.git
+cd acornoodle-books
+python3 -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
+```
+
+The repository is private; you need access to the NelsonGrey organization.
+
+## Book production
+
+### Production standard
+
+- Paperback, 8.5 x 11 inches
+- 60-page black-and-white interior on white paper
+- No-bleed interior
+- Glossy full-color cover
+- Large, age-appropriate illustrations with names and short facts
+- Single-sided coloring artwork
+- KDP Print Previewer **and** a physical proof are required for each title before publication
+
+### Pipeline
+
+1. **Prompts** — [books/prompts/manifest-v2.csv](books/prompts/manifest-v2.csv) lists every page: book, subject, art prompt, fact, status, and asset path. Regenerate with `books/scripts/build_prompt_manifest_v2.py`.
+2. **Art** — generate illustrations from the prompts into `books/art/interior-v2/<book-slug>/`; covers go in `books/art/cover-v3/`.
+3. **Print masters** — assemble the interior and cover PDFs for a title.
+4. **KDP package** — zip the print master with the upload data for KDP.
+
+| Script | Purpose |
+| --- | --- |
+| `build_prompt_manifest_v2.py` | Build the prompt manifest |
+| `build_books_v2.py` | Assemble v2 interior/cover PDFs (output to `books/archive/`) |
+| `build_covers_v3.py` | Build full-wrap v3 covers |
+| `build_crawling_bugs_print_master.py` | Print master for Crawling Bugs |
+| `build_additional_print_masters.py` | Print masters for the other launch titles |
+| `facts_v2.py` | Fact text used on pages |
+
+Run scripts from anywhere, for example `python books/scripts/build_covers_v3.py`. Paths resolve from the repository root.
+
+### Canonical KDP packages
 
 Only these ZIP files in `books/kdp-packages/` are current upload packages:
 
 - `acornoodle-books-crawling-bugs-complete-print-master.zip`
 - `acornoodle-books-roaring-dinosaurs-complete-print-master.zip`
 - `acornoodle-books-working-vehicles-complete-print-master.zip`
-- `acornoodle-books-launch-trio-kdp-packages.zip` — convenience bundle containing the three packages above
+- `acornoodle-books-launch-trio-kdp-packages.zip` — convenience bundle of the three above
 
-Working print masters are under `books/print-masters/`, brand assets under `brand/acornoodle/`, and the current business plan under `docs/business-plan/`.
+Everything under `books/archive/` is development-stage or historical work and is not a KDP upload source unless rebuilt into a canonical Acornoodle package.
 
-## Production standard
+## Website
 
-- Paperback, 8.5 x 11 inches
-- 60-page black-and-white interior on white paper
-- No bleed interior
-- Glossy full-color cover
-- Large, age-appropriate illustrations with names and short facts
-- Single-sided coloring artwork
-- KDP Print Previewer and a physical proof remain required for each title before publication
+A plain static site (HTML, CSS, JavaScript; no build step) in [website/dist/](website/dist/): Home, Books, Inside the Books, Launch, About, Support, Privacy, Terms, and Cookies.
 
-Everything under `books/archive/` is development-stage or historical artwork and are not KDP upload sources unless rebuilt into a canonical Acornoodle package.
+Preview locally:
 
-## Brand status
+```bash
+firebase emulators:start --only hosting     # serves website/dist
+# or
+python3 -m http.server 8000 --directory website/dist
+```
 
-All earlier working names are retired. Only Acornoodle Books may be used in covers, interiors, metadata, marketing, or publishing accounts.
+## Deployment
+
+The website deploys to Firebase Hosting. Aliases are defined in [.firebaserc](.firebaserc):
+
+```bash
+firebase deploy --only hosting --project development   # acornoodle-books-dev
+firebase deploy --only hosting --project staging       # acornoodle-books-staging
+firebase deploy --only hosting --project production    # acornoodle-books-prod
+```
+
+### Automatic deploys
+
+[.github/workflows/deploy-website.yml](.github/workflows/deploy-website.yml) deploys on every push to `develop`, `staging`, or `main` that changes `website/dist/**`, `firebase*.json`, or `.firebaserc`. Each branch maps to its own GitHub Environment (`development`, `staging`, `production`).
+
+Deploys are keyless. The workflow authenticates with [Workload Identity Federation](https://cloud.google.com/iam/docs/workload-identity-federation) because the organization policy `iam.disableServiceAccountKeyCreation` forbids service-account keys. Each Firebase project has a `github-deploy` service account (Firebase Hosting Admin only) and a GitHub OIDC provider that trusts only this repository and only that environment's branch (`develop`, `staging`, or `main`). Each GitHub Environment holds a `WIF_PROVIDER` variable with the provider's resource name. No credentials are stored in GitHub.
+
+### Non-prod access gate
+
+The dev and staging sites sit behind a Google sign-in wall (`website/dist/assets/auth-gate.js`), the same model as `EnvironmentGate` in vehicle-vitals. Production and `localhost` are never gated. It keeps the public out; it is not a hard auth boundary, because the allowlist ships in the page.
+
+A visitor gets in if their email's **domain** is in `ALLOWED_EMAIL_DOMAINS`, or their exact address is in `ALLOWED_EMAILS`. An empty allowlist locks everyone out. Both are comma-separated secrets set per GitHub Environment (`development`, `staging`); the deploy workflow writes them into `assets/env-config.js` at deploy time and fails if both are empty. It also passes the public Firebase web config from the `FIREBASE_WEB_API_KEY` and `FIREBASE_WEB_APP_ID` secrets.
+
+**Grant someone access:** add their address to `ALLOWED_EMAILS` (or their domain to `ALLOWED_EMAIL_DOMAINS`) under *Settings → Environments → development / staging → Environment secrets*, then re-run the deploy for that branch.
+
+**One-time setup per Firebase project** (`acornoodle-books-dev`, `acornoodle-books-staging`): register a Web app, enable **Google** under Authentication → Sign-in method, and confirm `<project>.web.app` is under Authentication → Settings → Authorized domains.
+
+Dev and staging also send `X-Robots-Tag: noindex, nofollow, noarchive` and a strict CSP (see `firebase.dev.json`, `firebase.staging.json`). Each environment has its own Firebase config; the workflow copies the right one to `firebase.json` before deploying.
+
+## Branching and releases
+
+```
+feature/*  →  develop  →  staging  →  main
+               (dev)      (staging)   (production)
+```
+
+`develop` is the default branch. Do not commit directly to `staging` or `main`; promote with pull requests. See [CONTRIBUTING.md](CONTRIBUTING.md) and [CHANGELOG.md](CHANGELOG.md).
+
+## Brand
+
+All earlier working names are retired. **Only "Acornoodle Books" may be used** in covers, interiors, metadata, marketing, or publishing accounts. In legal and publisher-facing contexts, identify Acornoodle Books as *an imprint of Nelson Grey LLC*.
+
+Logos, mascot, palette, and usage rules are in [brand/acornoodle/BRAND-GUIDE.md](brand/acornoodle/BRAND-GUIDE.md).
+
+## Documentation
+
+| Document | Location |
+| --- | --- |
+| Business plan and go-to-market strategy | [docs/business-plan/](docs/business-plan/) |
+| Name screening | [docs/brand/](docs/brand/) |
+| Social media strategy | [docs/marketing/SOCIAL-MEDIA-STRATEGY.md](docs/marketing/SOCIAL-MEDIA-STRATEGY.md) |
+| Woodland Problem Solvers product bible (future series concept) | [docs/product-development/](docs/product-development/) |
+
+## Contributing, security, and support
+
+- [CONTRIBUTING.md](CONTRIBUTING.md) — workflow and standards
+- [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) — expected behavior
+- [SECURITY.md](SECURITY.md) — reporting vulnerabilities
+- [SUPPORT.md](SUPPORT.md) — where to get help
+
+## License
+
+Copyright © 2026 Nelson Grey LLC. All rights reserved. This is proprietary material; see [LICENSE](LICENSE).
