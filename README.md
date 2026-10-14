@@ -1,5 +1,6 @@
 # Acornoodle Books
 
+[![CI](https://github.com/NelsonGrey/acornoodle-books/actions/workflows/ci.yml/badge.svg)](https://github.com/NelsonGrey/acornoodle-books/actions/workflows/ci.yml)
 [![Deploy Website](https://github.com/NelsonGrey/acornoodle-books/actions/workflows/deploy-website.yml/badge.svg)](https://github.com/NelsonGrey/acornoodle-books/actions/workflows/deploy-website.yml)
 ![License: Proprietary](https://img.shields.io/badge/license-proprietary-lightgrey)
 
@@ -24,6 +25,7 @@ This repository holds everything for the imprint: the coloring-book production p
 - [Branching and releases](#branching-and-releases)
 - [Brand](#brand)
 - [Documentation](#documentation)
+- [Quality and security](#quality-and-security)
 - [Contributing, security, and support](#contributing-security-and-support)
 - [License](#license)
 
@@ -202,10 +204,24 @@ Logos, mascot, palette, and usage rules are in [brand/acornoodle/BRAND-GUIDE.md]
 | Social media strategy | [docs/marketing/SOCIAL-MEDIA-STRATEGY.md](docs/marketing/SOCIAL-MEDIA-STRATEGY.md) |
 | Woodland Problem Solvers product bible (future series concept) | [docs/product-development/](docs/product-development/) |
 
+## Quality and security
+
+| Check | Where | What it does |
+| --- | --- | --- |
+| Site and config checks | CI (`scripts/check-site.py`) | Every page has `lang`, title, viewport, and description; local links and assets resolve; Firebase JSON is valid |
+| Book checks | CI (`scripts/check-books.py`) | Book scripts parse; the prompt manifest has its required columns, no blank titles, and no duplicate pages |
+| Secret scan | CI (gitleaks, full history) | Fails on committed keys, tokens, or private keys |
+| Promotion guard | CI, pull requests | Fails PRs that skip an environment (advisory; see below) |
+| Pipeline Summary | CI | Single pass/fail roll-up of the checks above |
+| Dependabot | GitHub | Alerts, security updates, weekly GitHub Actions and monthly Python updates |
+
+The organization is on the GitHub Free plan, so this private repository cannot use branch protection, secret scanning, or code scanning. CI covers what it can; the promotion flow is enforced by convention. See [SECURITY.md](SECURITY.md).
+
 ## Contributing, security, and support
 
 - [CONTRIBUTING.md](CONTRIBUTING.md) — workflow and standards
 - [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) — expected behavior
+- [CLAUDE.md](CLAUDE.md) — guide for AI-assisted sessions
 - [SECURITY.md](SECURITY.md) — reporting vulnerabilities
 - [SUPPORT.md](SUPPORT.md) — where to get help
 
