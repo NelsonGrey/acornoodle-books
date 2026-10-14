@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Acornoodle Books | Coming soon</title>
+  <meta name="description" content="Acornoodle Books makes big, friendly coloring books full of animals, bugs, dinosaurs, and vehicles for kids ages 5–9. Coming soon.">
+  <meta name="theme-color" content="#dff4fb">
+  <link rel="icon" type="image/png" href="assets/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Nunito:wght@400;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root { --brown:#57220f; --pink:#d91650; --blue:#219bd4; --gold:#f5ae27; --sky:#dff4fb; --leaf:#e6f4cf; }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; }
+    body { min-height: 100vh; display: flex; flex-direction: column; color: var(--brown); font: 400 1.0625rem/1.55 Nunito, system-ui, sans-serif;
+      background: radial-gradient(circle at 88% 18%, rgba(245,174,39,.38) 0 12%, transparent 12.4%), radial-gradient(circle at 8% 86%, rgba(217,22,80,.14) 0 16%, transparent 16.4%), linear-gradient(135deg, var(--sky), var(--leaf)); }
+    main { flex: 1; display: grid; grid-template-columns: 1.1fr .9fr; align-items: center; gap: 2rem; width: min(100%, 72rem); margin: 0 auto; padding: clamp(1.5rem, 5vw, 4rem) 1rem; }
+    .copy { text-align: left; }
+    .logo { width: min(15rem, 60%); height: auto; margin-bottom: 1.5rem; }
+    .eyebrow { margin: 0 0 .5rem; color: var(--blue); font-weight: 800; letter-spacing: .14em; text-transform: uppercase; font-size: .8rem; }
+    h1 { margin: 0 0 1rem; font: 800 clamp(2.75rem, 8vw, 5.25rem)/.98 "Baloo 2", Nunito, sans-serif; letter-spacing: -.02em; }
+    h1 em { color: var(--pink); font-style: normal; }
+    .lead { max-width: 34rem; margin: 0 0 1.25rem; font-size: 1.2rem; }
+    .pill { display: inline-block; padding: .55rem 1.1rem; border: 3px solid var(--brown); border-radius: 999px; background: var(--gold); font: 800 1rem "Baloo 2", Nunito, sans-serif; box-shadow: 4px 4px 0 var(--brown); }
+    .art { display: grid; place-items: center; }
+    .art img { width: min(100%, 26rem); height: auto; filter: drop-shadow(0 18px 20px rgba(87,34,15,.2)); }
+    footer { padding: 1.25rem 1rem; background: var(--brown); color: #fff; text-align: center; font-size: .875rem; }
+    footer strong { display: block; font: 800 1.125rem "Baloo 2", Nunito, sans-serif; }
+    footer small { color: rgba(255,255,255,.7); }
+    @media (max-width: 760px) { main { grid-template-columns: 1fr; text-align: center; } .copy { text-align: center; } .logo { margin-inline: auto; } .lead { margin-inline: auto; } .art { order: -1; } .art img { width: min(70%, 16rem); } }
+    @media (prefers-reduced-motion: no-preference) { .art img { animation: bob 4s ease-in-out infinite; } @keyframes bob { 50% { transform: translateY(-8px) rotate(1deg); } } }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="copy">
+      <img class="logo" src="assets/acornoodle-logo.png" alt="Acornoodle Books">
+      <p class="eyebrow">Color. Learn. Discover.</p>
+      <h1>Big things <em>to color</em> are coming.</h1>
+      <p class="lead">Acornoodle Books is putting the finishing touches on friendly coloring books full of bugs, dinosaurs, vehicles, and more, made for kids ages 5&ndash;9.</p>
+      <span class="pill">Coming soon</span>
+    </div>
+    <div class="art"><img src="assets/acornoodle-mascot.png" alt="The Acornoodle mascot waving hello"></div>
+  </main>
+  <footer>
+    <strong>Acornoodle Books</strong>
+    <small>&copy; 2026 Acornoodle Books, an imprint of Nelson Grey LLC. All rights reserved.</small>
+  </footer>
+</body>
+</html>
