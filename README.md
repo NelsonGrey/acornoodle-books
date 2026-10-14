@@ -172,6 +172,12 @@ A visitor gets in if their email's **domain** is in `ALLOWED_EMAIL_DOMAINS`, or 
 
 Dev and staging also send `X-Robots-Tag: noindex, nofollow, noarchive` and a strict CSP (see `firebase.dev.json`, `firebase.staging.json`). Each environment has its own Firebase config; the workflow copies the right one to `firebase.json` before deploying.
 
+### Production coming-soon page
+
+Until launch, production (`main`) serves a standalone coming-soon page from [website/coming-soon/](website/coming-soon/) instead of the full site in `website/dist/`. The deploy workflow swaps it in for `main` pushes. Dev and staging always deploy the full site.
+
+The switch is the `SHOW_COMING_SOON` variable in the `production` GitHub Environment. It is `true` now, and anything other than the exact value `false` keeps the coming-soon page up (fails safe). **To go live:** set `SHOW_COMING_SOON` to `false` under *Settings → Environments → production → Environment variables*, then re-run the Deploy Website workflow on `main`. The page collects no data and has no forms, because this is a children's imprint.
+
 ## Branching and releases
 
 ```
