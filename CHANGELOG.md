@@ -5,6 +5,7 @@ All notable changes to this project are documented here. The format follows [Kee
 ## [Unreleased]
 
 ### Added
+- Repository standards: CI (site checks, book script and manifest checks, gitleaks secret scan, advisory promotion guard, Pipeline Summary), CLAUDE.md, expanded SECURITY policy, `.gitattributes`, `.gitleaks.toml`, grouped Dependabot, and a filled-in GitHub About section.
 - Coming-soon page for production, controlled by the `SHOW_COMING_SOON` environment variable.
 - Google sign-in access gate on dev and staging with domain and exact-email allowlists (same model as vehicle-vitals).
 - Keyless deploys via Workload Identity Federation (org policy forbids service-account keys).
