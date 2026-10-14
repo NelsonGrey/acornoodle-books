@@ -62,7 +62,8 @@ acornoodle-books/
 ├── docs/               Business plan, brand/name screening, marketing, product development
 ├── scratch/            Throwaway review renders      (local only)
 ├── .github/            Workflows, issue/PR templates, CODEOWNERS, Dependabot
-├── firebase.json       Firebase Hosting config (serves website/dist)
+├── firebase.json       Default Firebase Hosting config (serves website/dist)
+├── firebase.{dev,staging,prod}.json  Per-environment hosting configs
 └── .firebaserc         Firebase project aliases
 ```
 
@@ -155,9 +156,21 @@ firebase deploy --only hosting --project production    # acornoodle-books-prod
 
 ### Automatic deploys
 
-[.github/workflows/deploy-website.yml](.github/workflows/deploy-website.yml) deploys on every push to `develop`, `staging`, or `main` that changes `website/dist/**`, `firebase.json`, or `.firebaserc`. Each branch maps to its own GitHub Environment (`development`, `staging`, `production`).
+[.github/workflows/deploy-website.yml](.github/workflows/deploy-website.yml) deploys on every push to `develop`, `staging`, or `main` that changes `website/dist/**`, `firebase*.json`, or `.firebaserc`. Each branch maps to its own GitHub Environment (`development`, `staging`, `production`).
 
-Each environment needs a secret named `FIREBASE_SERVICE_ACCOUNT` containing the service-account JSON for that environment's Firebase project. Deploys fail until these are set.
+Deploys are keyless. The workflow authenticates with [Workload Identity Federation](https://cloud.google.com/iam/docs/workload-identity-federation) because the organization policy `iam.disableServiceAccountKeyCreation` forbids service-account keys. Each Firebase project has a `github-deploy` service account (Firebase Hosting Admin only) and a GitHub OIDC provider that trusts only this repository and only that environment's branch (`develop`, `staging`, or `main`). Each GitHub Environment holds a `WIF_PROVIDER` variable with the provider's resource name. No credentials are stored in GitHub.
+
+### Non-prod access gate
+
+The dev and staging sites sit behind a Google sign-in wall (`website/dist/assets/auth-gate.js`), the same model as `EnvironmentGate` in vehicle-vitals. Production and `localhost` are never gated. It keeps the public out; it is not a hard auth boundary, because the allowlist ships in the page.
+
+A visitor gets in if their email's **domain** is in `ALLOWED_EMAIL_DOMAINS`, or their exact address is in `ALLOWED_EMAILS`. An empty allowlist locks everyone out. Both are comma-separated secrets set per GitHub Environment (`development`, `staging`); the deploy workflow writes them into `assets/env-config.js` at deploy time and fails if both are empty. It also passes the public Firebase web config from the `FIREBASE_WEB_API_KEY` and `FIREBASE_WEB_APP_ID` secrets.
+
+**Grant someone access:** add their address to `ALLOWED_EMAILS` (or their domain to `ALLOWED_EMAIL_DOMAINS`) under *Settings → Environments → development / staging → Environment secrets*, then re-run the deploy for that branch.
+
+**One-time setup per Firebase project** (`acornoodle-books-dev`, `acornoodle-books-staging`): register a Web app, enable **Google** under Authentication → Sign-in method, and confirm `<project>.web.app` is under Authentication → Settings → Authorized domains.
+
+Dev and staging also send `X-Robots-Tag: noindex, nofollow, noarchive` and a strict CSP (see `firebase.dev.json`, `firebase.staging.json`). Each environment has its own Firebase config; the workflow copies the right one to `firebase.json` before deploying.
 
 ## Branching and releases
 
