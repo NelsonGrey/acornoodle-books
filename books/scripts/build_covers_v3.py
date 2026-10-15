@@ -83,10 +83,14 @@ def title_lines(title: str) -> list[str]:
     return [" ".join(words[:best]), " ".join(words[best:])]
 
 
-def centered_fit(c: canvas.Canvas, text: str, x: float, y: float, width: float, start: float) -> None:
+def fit_size(c: canvas.Canvas, text: str, width: float, start: float) -> float:
     size = start
     while c.stringWidth(text, BOLD, size) > width and size > 18:
         size -= 1
+    return size
+
+
+def centered_text(c: canvas.Canvas, text: str, x: float, y: float, size: float) -> None:
     c.setFont(BOLD, size)
     c.drawCentredString(x, y, text)
 
@@ -115,28 +119,38 @@ def build_cover(book: str, title: str, color: str) -> Path:
     c.rect(0, 0, COVER_W, COVER_H, fill=1, stroke=0)
     crop_fill(c, art, FRONT_X, 0, PANEL_W + BLEED, COVER_H)
 
-    # Front title card and badges stay readable in Amazon thumbnail views.
-    c.setFillColor(theme)
-    c.roundRect(FRONT_X + 30, COVER_H - 174, PANEL_W - 60, 132, 22, fill=1, stroke=0)
-    c.setFillColor(white)
+    # Front title card hugs the title so it covers as little art as possible.
+    # The card's top edge stays fixed; its width and height follow the text.
+    cx = FRONT_X + PANEL_W / 2
+    top = COVER_H - 42
     lines = title_lines(title)
-    if len(lines) == 1:
-        centered_fit(c, lines[0], FRONT_X + PANEL_W / 2, COVER_H - 125, PANEL_W - 90, 39)
-    else:
-        centered_fit(c, lines[0], FRONT_X + PANEL_W / 2, COVER_H - 105, PANEL_W - 90, 34)
-        centered_fit(c, lines[1], FRONT_X + PANEL_W / 2, COVER_H - 145, PANEL_W - 90, 34)
-
-    c.setFillColor(white)
-    c.roundRect(FRONT_X + PANEL_W / 2 - 72, COVER_H - 210, 144, 28, 10, fill=1, stroke=0)
+    start = 39 if len(lines) == 1 else 34
+    size = min(fit_size(c, line, PANEL_W - 90, start) for line in lines)
+    author = "BY MARK NELSON"
+    text_w = max(
+        max(c.stringWidth(line, BOLD, size) for line in lines),
+        c.stringWidth(author, BOLD, 11),
+    )
+    card_w = text_w + 2 * 36
+    card_h = (76 if len(lines) == 1 else 108) + 22
     c.setFillColor(theme)
-    c.setFont(BOLD, 10.5)
-    c.drawCentredString(FRONT_X + PANEL_W / 2, COVER_H - 200, "BY MARK NELSON")
-
+    c.roundRect(cx - card_w / 2, top - card_h, card_w, card_h, 22, fill=1, stroke=0)
     c.setFillColor(white)
-    c.roundRect(FRONT_X + 48, 22, PANEL_W - 96, 142, 18, fill=1, stroke=0)
+    if len(lines) == 1:
+        centered_text(c, lines[0], cx, top - 52, size)
+    else:
+        centered_text(c, lines[0], cx, top - 46, size)
+        centered_text(c, lines[1], cx, top - 86, size)
+    centered_text(c, author, cx, top - card_h + 16, 11)
+
+    # Bottom card is trimmed to its widest content, centered on the front panel.
+    tagline = "26 BIG PICTURES - NAMES - FUN FACTS"
+    foot_w = max(c.stringWidth(tagline, BOLD, 15), 220) + 2 * 30
+    c.setFillColor(white)
+    c.roundRect(cx - foot_w / 2, 22, foot_w, 142, 18, fill=1, stroke=0)
     c.setFillColor(theme)
     c.setFont(BOLD, 15)
-    c.drawCentredString(FRONT_X + PANEL_W / 2, 147, "26 BIG PICTURES - NAMES - FUN FACTS")
+    c.drawCentredString(cx, 147, tagline)
     c.setFont(BOLD, 13)
     c.drawCentredString(FRONT_X + PANEL_W / 2, 128, "A COLORING BOOK FOR AGES 5-9")
     contain_image(c, COVER_IDENTITY, FRONT_X + PANEL_W / 2 - 110, 27, 220, 94)
@@ -144,16 +158,7 @@ def build_cover(book: str, title: str, color: str) -> Path:
     # KDP does not permit spine text on paperbacks under 79 pages.
 
     # Back-cover information panel.
-    c.setFillColor(white)
-    c.roundRect(38, 156, PANEL_W - 76, COVER_H - 210, 24, fill=1, stroke=0)
-    c.setFillColor(theme)
-    c.setFont(BOLD, 24)
-    c.drawString(64, COVER_H - 88, "COLOR. LEARN. DISCOVER.")
-    c.setFillColor(black)
-    c.setFont(REGULAR, 12)
-    t = c.beginText(64, COVER_H - 128)
-    t.setLeading(18)
-    for line in [
+    info_lines = [
         f"Meet 26 different {NOUNS[book]} in a book",
         "made especially for young artists.",
         "",
@@ -165,7 +170,24 @@ def build_cover(book: str, title: str, color: str) -> Path:
         "- Simple, child-friendly backgrounds",
         "- Single-sided coloring pages",
         "- Large 8.5 x 11 inch format",
-    ]:
+    ]
+    # Trim the card from the right to fit its widest line (left edge and height stay put).
+    headline = "COLOR. LEARN. DISCOVER."
+    content_w = max(
+        c.stringWidth(headline, BOLD, 24),
+        max(c.stringWidth(line, REGULAR, 12) for line in info_lines),
+        180,  # AGES badge
+    )
+    c.setFillColor(white)
+    c.roundRect(38, 156, 26 + content_w + 26, COVER_H - 210, 24, fill=1, stroke=0)
+    c.setFillColor(theme)
+    c.setFont(BOLD, 24)
+    c.drawString(64, COVER_H - 88, headline)
+    c.setFillColor(black)
+    c.setFont(REGULAR, 12)
+    t = c.beginText(64, COVER_H - 128)
+    t.setLeading(18)
+    for line in info_lines:
         t.textLine(line)
     c.drawText(t)
 
@@ -175,14 +197,23 @@ def build_cover(book: str, title: str, color: str) -> Path:
     c.setFont(BOLD, 16)
     c.drawCentredString(154, 199, "AGES 5-9")
 
-    contain_image(c, CORPORATE_LOGO, 52, 38, 116, 116)
+    # The corporate logo sits on a white panel so it reads on every cover color.
+    barcode_x = BLEED + PANEL_W - 18 - 144
+    imprint = "An imprint of Nelson Grey LLC"
+    site = "acornoodlebooks.com"
+    text_w = max(c.stringWidth(imprint, REGULAR, 8.5), c.stringWidth(site, BOLD, 10.5))
+    c.setFillColor(white)
+    c.roundRect(38, 22, 176 + text_w + 26 - 38, 126, 18, fill=1, stroke=0)
+    contain_image(c, CORPORATE_LOGO, 52, 30, 108, 108)
     c.setFillColor(black)
     c.setFont(REGULAR, 8.5)
-    c.drawString(176, 76, "An imprint of Nelson Grey LLC")
+    c.drawString(176, 84, imprint)
+    c.setFont(BOLD, 10.5)
+    c.drawString(176, 68, site)
 
     # Reserved KDP barcode area on the lower back cover.
     c.setFillColor(white)
-    c.rect(BLEED + PANEL_W - 18 - 144, 50, 144, 86, fill=1, stroke=0)
+    c.rect(barcode_x, 50, 144, 86, fill=1, stroke=0)
     c.save()
     return path
 
