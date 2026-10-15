@@ -144,16 +144,7 @@ def build_cover(book: str, title: str, color: str) -> Path:
     # KDP does not permit spine text on paperbacks under 79 pages.
 
     # Back-cover information panel.
-    c.setFillColor(white)
-    c.roundRect(38, 156, PANEL_W - 76, COVER_H - 210, 24, fill=1, stroke=0)
-    c.setFillColor(theme)
-    c.setFont(BOLD, 24)
-    c.drawString(64, COVER_H - 88, "COLOR. LEARN. DISCOVER.")
-    c.setFillColor(black)
-    c.setFont(REGULAR, 12)
-    t = c.beginText(64, COVER_H - 128)
-    t.setLeading(18)
-    for line in [
+    info_lines = [
         f"Meet 26 different {NOUNS[book]} in a book",
         "made especially for young artists.",
         "",
@@ -165,7 +156,24 @@ def build_cover(book: str, title: str, color: str) -> Path:
         "- Simple, child-friendly backgrounds",
         "- Single-sided coloring pages",
         "- Large 8.5 x 11 inch format",
-    ]:
+    ]
+    # Trim the card from the right to fit its widest line (left edge and height stay put).
+    headline = "COLOR. LEARN. DISCOVER."
+    content_w = max(
+        c.stringWidth(headline, BOLD, 24),
+        max(c.stringWidth(line, REGULAR, 12) for line in info_lines),
+        180,  # AGES badge
+    )
+    c.setFillColor(white)
+    c.roundRect(38, 156, 26 + content_w + 26, COVER_H - 210, 24, fill=1, stroke=0)
+    c.setFillColor(theme)
+    c.setFont(BOLD, 24)
+    c.drawString(64, COVER_H - 88, headline)
+    c.setFillColor(black)
+    c.setFont(REGULAR, 12)
+    t = c.beginText(64, COVER_H - 128)
+    t.setLeading(18)
+    for line in info_lines:
         t.textLine(line)
     c.drawText(t)
 
@@ -177,14 +185,17 @@ def build_cover(book: str, title: str, color: str) -> Path:
 
     # The corporate logo sits on a white panel so it reads on every cover color.
     barcode_x = BLEED + PANEL_W - 18 - 144
+    imprint = "An imprint of Nelson Grey LLC"
+    site = "acornoodlebooks.com"
+    text_w = max(c.stringWidth(imprint, REGULAR, 8.5), c.stringWidth(site, BOLD, 10.5))
     c.setFillColor(white)
-    c.roundRect(38, 22, barcode_x - 12 - 38, 126, 18, fill=1, stroke=0)
+    c.roundRect(38, 22, 176 + text_w + 26 - 38, 126, 18, fill=1, stroke=0)
     contain_image(c, CORPORATE_LOGO, 52, 30, 108, 108)
     c.setFillColor(black)
     c.setFont(REGULAR, 8.5)
-    c.drawString(176, 84, "An imprint of Nelson Grey LLC")
+    c.drawString(176, 84, imprint)
     c.setFont(BOLD, 10.5)
-    c.drawString(176, 68, "acornoodlebooks.com")
+    c.drawString(176, 68, site)
 
     # Reserved KDP barcode area on the lower back cover.
     c.setFillColor(white)
