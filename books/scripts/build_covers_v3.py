@@ -83,10 +83,14 @@ def title_lines(title: str) -> list[str]:
     return [" ".join(words[:best]), " ".join(words[best:])]
 
 
-def centered_fit(c: canvas.Canvas, text: str, x: float, y: float, width: float, start: float) -> None:
+def fit_size(c: canvas.Canvas, text: str, width: float, start: float) -> float:
     size = start
     while c.stringWidth(text, BOLD, size) > width and size > 18:
         size -= 1
+    return size
+
+
+def centered_text(c: canvas.Canvas, text: str, x: float, y: float, size: float) -> None:
     c.setFont(BOLD, size)
     c.drawCentredString(x, y, text)
 
@@ -115,22 +119,31 @@ def build_cover(book: str, title: str, color: str) -> Path:
     c.rect(0, 0, COVER_W, COVER_H, fill=1, stroke=0)
     crop_fill(c, art, FRONT_X, 0, PANEL_W + BLEED, COVER_H)
 
-    # Front title card and badges stay readable in Amazon thumbnail views.
-    c.setFillColor(theme)
-    c.roundRect(FRONT_X + 30, COVER_H - 174, PANEL_W - 60, 132, 22, fill=1, stroke=0)
-    c.setFillColor(white)
+    # Front title card hugs the title so it covers as little art as possible.
+    # The card's top edge stays fixed; its width and height follow the text.
+    cx = FRONT_X + PANEL_W / 2
+    top = COVER_H - 42
     lines = title_lines(title)
-    if len(lines) == 1:
-        centered_fit(c, lines[0], FRONT_X + PANEL_W / 2, COVER_H - 125, PANEL_W - 90, 39)
-    else:
-        centered_fit(c, lines[0], FRONT_X + PANEL_W / 2, COVER_H - 105, PANEL_W - 90, 34)
-        centered_fit(c, lines[1], FRONT_X + PANEL_W / 2, COVER_H - 145, PANEL_W - 90, 34)
-
+    start = 39 if len(lines) == 1 else 34
+    size = min(fit_size(c, line, PANEL_W - 90, start) for line in lines)
+    text_w = max(c.stringWidth(line, BOLD, size) for line in lines)
+    card_w = text_w + 2 * 36
+    card_h = 76 if len(lines) == 1 else 108
+    c.setFillColor(theme)
+    c.roundRect(cx - card_w / 2, top - card_h, card_w, card_h, 22, fill=1, stroke=0)
     c.setFillColor(white)
-    c.roundRect(FRONT_X + PANEL_W / 2 - 72, COVER_H - 210, 144, 28, 10, fill=1, stroke=0)
+    if len(lines) == 1:
+        centered_text(c, lines[0], cx, top - 52, size)
+    else:
+        centered_text(c, lines[0], cx, top - 46, size)
+        centered_text(c, lines[1], cx, top - 86, size)
+
+    badge_y = top - card_h - 8 - 28
+    c.setFillColor(white)
+    c.roundRect(cx - 72, badge_y, 144, 28, 10, fill=1, stroke=0)
     c.setFillColor(theme)
     c.setFont(BOLD, 10.5)
-    c.drawCentredString(FRONT_X + PANEL_W / 2, COVER_H - 200, "BY MARK NELSON")
+    c.drawCentredString(cx, badge_y + 10, "BY MARK NELSON")
 
     c.setFillColor(white)
     c.roundRect(FRONT_X + 48, 22, PANEL_W - 96, 142, 18, fill=1, stroke=0)
