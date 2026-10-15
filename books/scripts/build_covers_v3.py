@@ -179,7 +179,7 @@ def build_cover(book: str, title: str, color: str) -> Path:
     c.setFillColor(black)
     c.setFont(REGULAR, 8.5)
     c.drawString(176, 76, "An imprint of Nelson Grey LLC")
-    c.setFillColor(theme)
+    c.setFillColor(white)
     c.setFont(BOLD, 10.5)
     c.drawString(176, 60, "acornoodlebooks.com")
 
