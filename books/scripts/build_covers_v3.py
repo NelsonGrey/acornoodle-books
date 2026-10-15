@@ -126,9 +126,13 @@ def build_cover(book: str, title: str, color: str) -> Path:
     lines = title_lines(title)
     start = 39 if len(lines) == 1 else 34
     size = min(fit_size(c, line, PANEL_W - 90, start) for line in lines)
-    text_w = max(c.stringWidth(line, BOLD, size) for line in lines)
+    author = "BY MARK NELSON"
+    text_w = max(
+        max(c.stringWidth(line, BOLD, size) for line in lines),
+        c.stringWidth(author, BOLD, 11),
+    )
     card_w = text_w + 2 * 36
-    card_h = 76 if len(lines) == 1 else 108
+    card_h = (76 if len(lines) == 1 else 108) + 22
     c.setFillColor(theme)
     c.roundRect(cx - card_w / 2, top - card_h, card_w, card_h, 22, fill=1, stroke=0)
     c.setFillColor(white)
@@ -137,19 +141,16 @@ def build_cover(book: str, title: str, color: str) -> Path:
     else:
         centered_text(c, lines[0], cx, top - 46, size)
         centered_text(c, lines[1], cx, top - 86, size)
+    centered_text(c, author, cx, top - card_h + 16, 11)
 
-    badge_y = top - card_h - 8 - 28
+    # Bottom card is trimmed to its widest content, centered on the front panel.
+    tagline = "26 BIG PICTURES - NAMES - FUN FACTS"
+    foot_w = max(c.stringWidth(tagline, BOLD, 15), 220) + 2 * 30
     c.setFillColor(white)
-    c.roundRect(cx - 72, badge_y, 144, 28, 10, fill=1, stroke=0)
-    c.setFillColor(theme)
-    c.setFont(BOLD, 10.5)
-    c.drawCentredString(cx, badge_y + 10, "BY MARK NELSON")
-
-    c.setFillColor(white)
-    c.roundRect(FRONT_X + 48, 22, PANEL_W - 96, 142, 18, fill=1, stroke=0)
+    c.roundRect(cx - foot_w / 2, 22, foot_w, 142, 18, fill=1, stroke=0)
     c.setFillColor(theme)
     c.setFont(BOLD, 15)
-    c.drawCentredString(FRONT_X + PANEL_W / 2, 147, "26 BIG PICTURES - NAMES - FUN FACTS")
+    c.drawCentredString(cx, 147, tagline)
     c.setFont(BOLD, 13)
     c.drawCentredString(FRONT_X + PANEL_W / 2, 128, "A COLORING BOOK FOR AGES 5-9")
     contain_image(c, COVER_IDENTITY, FRONT_X + PANEL_W / 2 - 110, 27, 220, 94)
