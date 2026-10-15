@@ -175,17 +175,20 @@ def build_cover(book: str, title: str, color: str) -> Path:
     c.setFont(BOLD, 16)
     c.drawCentredString(154, 199, "AGES 5-9")
 
-    contain_image(c, CORPORATE_LOGO, 52, 38, 116, 116)
+    # The corporate logo sits on a white panel so it reads on every cover color.
+    barcode_x = BLEED + PANEL_W - 18 - 144
+    c.setFillColor(white)
+    c.roundRect(38, 22, barcode_x - 12 - 38, 126, 18, fill=1, stroke=0)
+    contain_image(c, CORPORATE_LOGO, 52, 30, 108, 108)
     c.setFillColor(black)
     c.setFont(REGULAR, 8.5)
-    c.drawString(176, 76, "An imprint of Nelson Grey LLC")
-    c.setFillColor(white)
+    c.drawString(176, 84, "An imprint of Nelson Grey LLC")
     c.setFont(BOLD, 10.5)
-    c.drawString(176, 60, "acornoodlebooks.com")
+    c.drawString(176, 68, "acornoodlebooks.com")
 
     # Reserved KDP barcode area on the lower back cover.
     c.setFillColor(white)
-    c.rect(BLEED + PANEL_W - 18 - 144, 50, 144, 86, fill=1, stroke=0)
+    c.rect(barcode_x, 50, 144, 86, fill=1, stroke=0)
     c.save()
     return path
 
