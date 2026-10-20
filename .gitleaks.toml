@@ -1,0 +1,4 @@
+title = "acornoodle-books gitleaks config"
+
+[extend]
+useDefault = true

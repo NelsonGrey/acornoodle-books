@@ -137,6 +137,10 @@ nav a::after {
   background: #fff;
 }
 
+a.social-placeholder {
+  cursor: pointer;
+}
+
 .social-placeholder svg {
   width: 18px;
   height: 18px;
@@ -224,6 +228,22 @@ nav a::after {
 
 .library-book .status.preparing {
   background: var(--doodle-green);
+}
+
+.library-book a.status.available {
+  background: var(--doodle-green);
+  text-decoration: none;
+}
+
+.library-book a.status.available:hover,
+.launch-book-copy a.status-pill.available:hover {
+  text-decoration: underline;
+}
+
+.launch-book-copy a.status-pill.available {
+  background: var(--doodle-green);
+  color: #fff;
+  text-decoration: none;
 }
 
 .library-page .availability-note {
