@@ -1,6 +1,6 @@
 # Acornoodle Books: guide for Claude sessions
 
-Children's coloring-book imprint of Nelson Grey LLC (ages 5–9), pre-launch. This repo holds the book production pipeline, the shared brand system, business docs, and the static website. Read `README.md` first; brand rules are in `brand/acornoodle/BRAND-GUIDE.md`.
+Children's coloring-book imprint of Nelson Grey LLC (ages 5–9), **live since 2026-10-20** (three titles on Amazon.com). This repo holds the book production pipeline, the shared brand system, business docs, and the static website. Read `README.md` first; brand rules are in `brand/acornoodle/BRAND-GUIDE.md`.
 
 ## Commands
 - `pip install -r requirements.txt`: book script dependencies (Python 3.11+, macOS fonts).
@@ -16,10 +16,11 @@ Children's coloring-book imprint of Nelson Grey LLC (ages 5–9), pre-launch. Th
 - `brand/`, `docs/`: logos and mascot, business plan, name screening, marketing, product development.
 
 ## Rules that must keep holding
-- Flow is `feature/*` → `develop` → `staging` → `main`. Never push or open a PR to `main`, and never deploy to prod, unless the user explicitly says to. Prod is **not live**: `main` deploys the coming-soon page unless the `SHOW_COMING_SOON` variable in the `production` GitHub Environment is exactly `false`.
+- Flow is `feature/*` → `develop` → `staging` → `main`. Never push or open a PR to `main`, and never deploy to prod, unless the user explicitly says to. Prod is **live**: `SHOW_COMING_SOON` in the `production` GitHub Environment is `false`; setting it back to `true` rolls prod back to the coming-soon page. Any push to `main` changes the public site. Keep "Automatically delete head branches" off in the repo settings (it once deleted `staging`). Launch status and follow-ups are in `docs/launch/LAUNCH-STATUS.md`.
 - Use only the name **Acornoodle Books**; earlier working names are retired. Legal and publisher-facing copy says "an imprint of Nelson Grey LLC".
 - This is a children's publisher: no data collection, forms, or accounts on the website, and no personal information about children anywhere. Check facts in books before they enter the prompt manifest.
 - Layout (global rule, also in `~/.claude/CLAUDE.md`): all content and its backgrounds sit in a centered 1280px column (`--site-content-width` in `website/dist/theme.css`); outside it the page is white; only the header and footer span the full width.
+- Support email is support@acornoodlebooks.com. The site uses no analytics by design.
 - Book standard: 8.5 x 11 in paperback, 60-page black-and-white no-bleed interior, glossy full-color cover; KDP Print Previewer and a physical proof before each title publishes.
 - Dev and staging sit behind a Google sign-in gate (`website/dist/assets/auth-gate.js`). The allowlist comes from the `ALLOWED_EMAIL_DOMAINS` and `ALLOWED_EMAILS` secrets in each GitHub Environment and is written to `assets/env-config.js` at deploy time. An empty allowlist locks everyone out. Never commit real addresses or API keys.
 - Deploys are keyless (Workload Identity Federation) because org policy forbids service-account keys. Never create or commit a service-account key.
