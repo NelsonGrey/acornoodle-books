@@ -2,11 +2,11 @@
 
 ## Supported Versions
 
-Acornoodle Books has not launched. Only the code currently on each environment branch is supported; there is no long-term support for older commits.
+Acornoodle Books launched on 2026-10-20. Only the code currently on each environment branch is supported; there is no long-term support for older commits.
 
 | Branch | Environment | Status |
 |---|---|---|
-| `main` | Production (coming-soon page) | Supported |
+| `main` | Production (live site) | Supported |
 | `staging` | Staging | Supported |
 | `develop` | Development (default branch) | Supported |
 
