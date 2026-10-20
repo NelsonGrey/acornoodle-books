@@ -226,6 +226,22 @@ nav a::after {
   background: var(--doodle-green);
 }
 
+.library-book a.status.available {
+  background: var(--doodle-green);
+  text-decoration: none;
+}
+
+.library-book a.status.available:hover,
+.launch-book-copy a.status-pill.available:hover {
+  text-decoration: underline;
+}
+
+.launch-book-copy a.status-pill.available {
+  background: var(--doodle-green);
+  color: #fff;
+  text-decoration: none;
+}
+
 .library-page .availability-note {
   max-width: 880px;
   margin: 2rem auto 0;

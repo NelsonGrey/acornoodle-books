@@ -42,7 +42,7 @@ This repository holds everything for the imprint: the coloring-book production p
 | Farm animals | Busy Farm Animals, Cuddly Farm Animals |
 | Vehicles | Working Vehicles, Racing Vehicles |
 
-**Launch titles** (KDP-ready): Crawling Bugs, Roaring Dinosaurs, and Working Vehicles.
+**Launch titles** (live on Amazon.com): Crawling Bugs, Roaring Dinosaurs, and Working Vehicles.
 
 ## Repository layout
 
