@@ -138,6 +138,8 @@ Everything under `books/archive/` is development-stage or historical work and is
 
 A plain static site (HTML, CSS, JavaScript; no build step) in [website/dist/](website/dist/): Home, Books, Inside the Books, Launch, About, Support, Privacy, Terms, and Cookies.
 
+Layout follows the global 1280px rule: content and backgrounds in a centered column (`--site-content-width` in `website/dist/theme.css`), white outside, header and footer full width. The Support page lists support@acornoodlebooks.com.
+
 Preview locally:
 
 ```bash
@@ -174,11 +176,11 @@ A visitor gets in if their email's **domain** is in `ALLOWED_EMAIL_DOMAINS`, or 
 
 Dev and staging also send `X-Robots-Tag: noindex, nofollow, noarchive` and a strict CSP (see `firebase.dev.json`, `firebase.staging.json`). Each environment has its own Firebase config; the workflow copies the right one to `firebase.json` before deploying.
 
-### Production coming-soon page
+### Production coming-soon switch
 
-Until launch, production (`main`) serves a standalone coming-soon page from [website/coming-soon/](website/coming-soon/) instead of the full site in `website/dist/`. The deploy workflow swaps it in for `main` pushes. Dev and staging always deploy the full site.
+**The site went live on 2026-10-20** at https://acornoodlebooks.com. Production (`main`) can still serve a standalone coming-soon page from [website/coming-soon/](website/coming-soon/) instead of the full site in `website/dist/`; the deploy workflow swaps it in for `main` pushes when the switch below is not `false`. Dev and staging always deploy the full site.
 
-The switch is the `SHOW_COMING_SOON` variable in the `production` GitHub Environment. It is `true` now, and anything other than the exact value `false` keeps the coming-soon page up (fails safe). **To go live:** set `SHOW_COMING_SOON` to `false` under *Settings → Environments → production → Environment variables*, then re-run the Deploy Website workflow on `main`. The page collects no data and has no forms, because this is a children's imprint.
+The switch is the `SHOW_COMING_SOON` variable in the `production` GitHub Environment. It is `false` now (live). Anything other than the exact value `false` serves the coming-soon page (fails safe). **To roll back:** set `SHOW_COMING_SOON` to `true` under *Settings → Environments → production → Environment variables*, then re-run the Deploy Website workflow on `main`. The page collects no data and has no forms, because this is a children's imprint. Launch status and follow-ups: [docs/launch/LAUNCH-STATUS.md](docs/launch/LAUNCH-STATUS.md).
 
 ## Branching and releases
 
@@ -187,7 +189,7 @@ feature/*  →  develop  →  staging  →  main
                (dev)      (staging)   (production)
 ```
 
-`develop` is the default branch. Do not commit directly to `staging` or `main`; promote with pull requests. See [CONTRIBUTING.md](CONTRIBUTING.md) and [CHANGELOG.md](CHANGELOG.md).
+`develop` is the default branch. Do not commit directly to `staging` or `main`; promote with pull requests. Keep the repo setting "Automatically delete head branches" **off**: with it on, merging `staging` into `main` deletes `staging`. See [CONTRIBUTING.md](CONTRIBUTING.md) and [CHANGELOG.md](CHANGELOG.md).
 
 ## Brand
 
@@ -201,6 +203,7 @@ Logos, mascot, palette, and usage rules are in [brand/acornoodle/BRAND-GUIDE.md]
 | --- | --- |
 | Business plan and go-to-market strategy | [docs/business-plan/](docs/business-plan/) |
 | Name screening | [docs/brand/](docs/brand/) |
+| Launch status and follow-ups | [docs/launch/LAUNCH-STATUS.md](docs/launch/LAUNCH-STATUS.md) |
 | Social media strategy | [docs/marketing/SOCIAL-MEDIA-STRATEGY.md](docs/marketing/SOCIAL-MEDIA-STRATEGY.md) |
 | Woodland Problem Solvers product bible (future series concept) | [docs/product-development/](docs/product-development/) |
 
