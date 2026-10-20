@@ -7,6 +7,7 @@ stylesheets, and images resolve to files. Also validates the JSON config files.
 Run from the repository root: python3 scripts/check-site.py
 """
 import json
+import re
 import sys
 from html.parser import HTMLParser
 from pathlib import Path
@@ -81,6 +82,13 @@ def main() -> int:
                     clean = target.with_suffix(".html") if not target.suffix else target
                     if not clean.exists():
                         errors.append(f"{rel}: broken local reference {ref!r}")
+    dist = ROOT / "website" / "dist"
+    sitemap = dist / "sitemap.xml"
+    if sitemap.exists():
+        for loc in re.findall(r"<loc>(.*?)</loc>", sitemap.read_text(encoding="utf-8")):
+            path = urlparse(loc).path.strip("/") or "index"
+            if not (dist / f"{path}.html").exists():
+                errors.append(f"website/dist/sitemap.xml: {loc} has no matching page")
     for name in JSON_FILES:
         path = ROOT / name
         if path.exists():
