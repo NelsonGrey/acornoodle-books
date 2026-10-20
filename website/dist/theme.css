@@ -1,4 +1,5 @@
 :root {
+  --site-content-width: 80rem;
   --doodle-brown: #57220f;
   --doodle-pink: #d91650;
   --doodle-blue: #219bd4;
@@ -10,7 +11,7 @@
 }
 
 body {
-  background: var(--doodle-sky);
+  background: #fff;
 }
 
 .site-header {
@@ -588,4 +589,22 @@ a.social-placeholder {
     grid-template-columns: 1fr;
     width: min(330px, calc(100% - 2rem));
   }
+}
+
+/* Site layout: content and its backgrounds live in one centered 1280px column.
+   Outside the column the page is white; only the header and footer span the full width. */
+main {
+  width: 100%;
+  max-width: var(--site-content-width);
+  margin-inline: auto;
+}
+
+.site-header,
+.pinned-footer {
+  padding-inline: max(clamp(1.2rem, 4vw, 4rem), calc((100vw - var(--site-content-width)) / 2 + clamp(1.2rem, 4vw, 4rem)));
+}
+
+/* The hero headline is sized for the 1280px column, not the full viewport. */
+.home-hero h1 {
+  font-size: clamp(3.1rem, 5.2vw, 5.4rem);
 }
