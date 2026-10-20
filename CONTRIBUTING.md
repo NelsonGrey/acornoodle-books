@@ -27,6 +27,10 @@ Source, scripts, prompts, brand assets, docs, and the deployable website (`websi
 
 Never commit credentials, service-account keys, API tokens, or `.env` files.
 
+## Checks
+
+Before opening a pull request, run `python3 scripts/check-site.py` for website changes and `python3 scripts/check-books.py` for script or manifest changes, plus `gitleaks detect --source . --redact` if you touched config or secrets handling. CI runs the same checks, a secret scan, and an advisory promotion guard that fails pull requests which skip an environment (`develop` → `staging` → `main` only). Branch protection is not available on this plan, so follow the flow by hand.
+
 ## Books
 
 - Follow the [production standard](README.md#production-standard): 8.5 x 11 in, 60-page black-and-white interior, no-bleed interior, glossy full-color cover.

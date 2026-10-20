@@ -4,9 +4,21 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
-    labels: ["dependencies"]
+    open-pull-requests-limit: 3
+    groups:
+      github-actions:
+        patterns:
+          - "*"
+    labels:
+      - "dependencies"
   - package-ecosystem: "pip"
     directory: "/"
     schedule:
       interval: "monthly"
-    labels: ["dependencies"]
+    open-pull-requests-limit: 3
+    groups:
+      python:
+        patterns:
+          - "*"
+    labels:
+      - "dependencies"
