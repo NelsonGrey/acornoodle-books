@@ -4,6 +4,19 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-10-20 (public launch)
+
+### Launch
+- Production now serves the full site at https://acornoodlebooks.com (`SHOW_COMING_SOON=false`). Crawling Bugs, Roaring Dinosaurs, and Working Vehicles are live on Amazon.com and linked from the Books and Launch pages.
+- Support email (support@acornoodlebooks.com) published; stale private-preview wording removed from the Support and Privacy pages.
+- Pinterest, Instagram, and Facebook linked in the footer; Pinterest domain verification added.
+- `robots.txt`, `sitemap.xml`, 404 page, canonical, Open Graph, and Twitter card tags.
+- Layout: content and backgrounds confined to a centered 1280px column (global rule); all 12 site covers re-rendered from the current cover script.
+
+### Changed
+- **Lonely Fish renamed Curious Fish** (display title; slug unchanged).
+- Repo setting "Automatically delete head branches" turned off after it deleted `staging` on a promotion merge.
+
 ### Added
 - Repository standards: CI (site checks, book script and manifest checks, gitleaks secret scan, advisory promotion guard, Pipeline Summary), CLAUDE.md, expanded SECURITY policy, `.gitattributes`, `.gitleaks.toml`, grouped Dependabot, and a filled-in GitHub About section.
 - Coming-soon page for production, controlled by the `SHOW_COMING_SOON` environment variable.
