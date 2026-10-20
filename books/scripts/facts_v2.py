@@ -141,7 +141,7 @@ FACTS = {
         "Bannerfish": "The bannerfish's long dorsal fin trails behind it like a ribbon.",
         "Jack Fish": "Bigeye trevallies often form schools during the day and hunt at night.",
     },
-    "Lonely Fish": {
+    "Curious Fish": {
         "Pufferfish": "A pufferfish can swallow water and expand its body when it feels threatened.",
         "Seahorse": "A seahorse uses its curled tail to hold onto seagrass and coral.",
         "Betta Fish": "Betta fish can breathe air from the surface with a special labyrinth organ.",

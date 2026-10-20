@@ -37,7 +37,7 @@ This repository holds everything for the imprint: the coloring-book production p
 | --- | --- |
 | Bugs | Crawling Bugs, Flying Bugs |
 | Birds | Singing Birds, Soaring Birds |
-| Fish | Schools of Fish, Lonely Fish |
+| Fish | Schools of Fish, Curious Fish |
 | Dinosaurs | Roaring Dinosaurs, Sleepy Dinosaurs |
 | Farm animals | Busy Farm Animals, Cuddly Farm Animals |
 | Vehicles | Working Vehicles, Racing Vehicles |

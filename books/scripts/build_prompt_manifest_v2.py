@@ -17,7 +17,7 @@ BOOKS={
 "Bald Eagle","Golden Eagle","Red-Tailed Hawk","Peregrine Falcon","Osprey","Turkey Vulture","California Condor","Barn Owl","Snowy Owl","Great Blue Heron","Sandhill Crane","Brown Pelican","White Pelican","Herring Gull","Albatross","Frigatebird","Canada Goose","Trumpeter Swan","Wood Stork","Roseate Spoonbill","American Kestrel","Mississippi Kite","Northern Harrier","Common Raven","Black Skimmer","Anhinga"]),
 "schools-of-fish":("Schools of Fish","#168C9E",[
 "Sardines","Anchovies","Herring","Mackerel","Blue Tangs","Yellow Tangs","Clownfish","Cardinalfish","Glassfish","Rainbowfish","Neon Tetras","Zebra Danios","Harlequin Rasboras","Silver Dollars","Scissortail Fish","Goatfish","Fusiliers","Snappers","Grunts","Bream","Mullet","Minnows","Salmon","Moorish Idols","Bannerfish","Jack Fish"]),
-"lonely-fish":("Lonely Fish","#496DB3",[
+"lonely-fish":("Curious Fish","#496DB3",[
 "Pufferfish","Seahorse","Betta Fish","Lionfish","Anglerfish","Butterflyfish","Triggerfish","Parrotfish","Boxfish","Goby","Flounder","Moray Eel","Flying Fish","Swordfish","Pumpkinseed Sunfish","Barracuda","Mandarinfish","Discus Fish","Koi Fish","Goldfish","Trout","Catfish","Stingray","Electric Eel","Leafy Seadragon","Ocean Sunfish"]),
 "roaring-dinosaurs":("Roaring Dinosaurs","#6A8F3D",[
 "Tyrannosaurus Rex","Triceratops","Allosaurus","Stegosaurus","Spinosaurus","Carnotaurus","Ankylosaurus","Dilophosaurus","Baryonyx","Ceratosaurus","Iguanodon","Parasaurolophus","Giganotosaurus","Albertosaurus","Majungasaurus","Utahraptor","Deinonychus","Megalosaurus","Suchomimus","Acrocanthosaurus","Torvosaurus","Daspletosaurus","Cryolophosaurus","Monolophosaurus","Yangchuanosaurus","Mapusaurus"]),
