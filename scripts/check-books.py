@@ -25,7 +25,8 @@ def main() -> int:
     manifest = ROOT / "books" / "prompts" / "manifest-v2.csv"
     rows = 0
     if not manifest.exists():
-        errors.append("books/prompts/manifest-v2.csv is missing")
+        # The manifest is private (gitignored), so it is absent in CI and public clones.
+        print("note: books/prompts/manifest-v2.csv not present (kept private); skipping manifest checks")
     else:
         with manifest.open(newline="", encoding="utf-8") as handle:
             reader = csv.DictReader(handle)
