@@ -53,7 +53,6 @@ docs/product-development/
 output/
 tmp/
 scripts/build_cloverleaf_crew*.py
-# Business plan and marketing source files
+# Business plan (brand and marketing promo material stays in the repo)
 docs/business-plan/
-marketing/
-brand/*.zip
+marketing/*.zip
