@@ -50,7 +50,7 @@ This repository holds everything for the imprint: the coloring-book production p
 acornoodle-books/
 ├── books/              Coloring-book initiative (KDP)
 │   ├── scripts/            Build scripts
-│   ├── prompts/            Art prompt manifests (CSV)
+│   ├── prompts/            Art prompt manifests (CSV), local only, not in git
 │   ├── art/                Source art            (local only, not in git)
 │   ├── print-masters/      Working print masters (local only)
 │   ├── builds/             Intermediate builds   (local only)
@@ -107,14 +107,13 @@ The repository is private; you need access to the NelsonGrey organization.
 
 ### Pipeline
 
-1. **Prompts** — [books/prompts/manifest-v2.csv](books/prompts/manifest-v2.csv) lists every page: book, subject, art prompt, fact, status, and asset path. Regenerate with `books/scripts/build_prompt_manifest_v2.py`.
+1. **Prompts** — `books/prompts/manifest-v2.csv` (local only, gitignored) lists every page: book, subject, art prompt, fact, status, and asset path. Regenerate with `books/scripts/build_prompt_manifest_v2.py`.
 2. **Art** — generate illustrations from the prompts into `books/art/interior-v2/<book-slug>/`; covers go in `books/art/cover-v3/`.
 3. **Print masters** — assemble the interior and cover PDFs for a title.
 4. **KDP package** — zip the print master with the upload data for KDP.
 
 | Script | Purpose |
 | --- | --- |
-| `build_prompt_manifest_v2.py` | Build the prompt manifest |
 | `build_books_v2.py` | Assemble v2 interior/cover PDFs (output to `books/archive/`) |
 | `build_covers_v3.py` | Build full-wrap v3 covers |
 | `build_crawling_bugs_print_master.py` | Print master for Crawling Bugs |
@@ -201,11 +200,9 @@ Logos, mascot, palette, and usage rules are in [brand/acornoodle/BRAND-GUIDE.md]
 
 | Document | Location |
 | --- | --- |
-| Business plan and go-to-market strategy | [docs/business-plan/](docs/business-plan/) |
 | Name screening | [docs/brand/](docs/brand/) |
 | Launch status and follow-ups | [docs/launch/LAUNCH-STATUS.md](docs/launch/LAUNCH-STATUS.md) |
 | Social media strategy | [docs/marketing/SOCIAL-MEDIA-STRATEGY.md](docs/marketing/SOCIAL-MEDIA-STRATEGY.md) |
-| Woodland Problem Solvers product bible (future series concept) | [docs/product-development/](docs/product-development/) |
 
 ## Quality and security
 

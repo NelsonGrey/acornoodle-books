@@ -42,3 +42,17 @@ service-account*.json
 *-service-account*.json
 id_rsa*
 *_log.txt
+
+# --- Intellectual property: kept local/private, never in the public repo (2026-10-20) ---
+# Book content: page prompts, subject lists, and facts
+books/prompts/
+books/scripts/facts_v2.py
+books/scripts/build_prompt_manifest*.py
+# Unreleased series (Cloverleaf Crew / Woodland) and product development
+docs/product-development/
+output/
+tmp/
+scripts/build_cloverleaf_crew*.py
+# Business plan (brand and marketing promo material stays in the repo)
+docs/business-plan/
+marketing/*.zip

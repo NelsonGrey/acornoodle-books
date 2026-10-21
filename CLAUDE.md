@@ -5,7 +5,7 @@ Children's coloring-book imprint of Nelson Grey LLC (ages 5–9), **live since 2
 ## Commands
 - `pip install -r requirements.txt`: book script dependencies (Python 3.11+, macOS fonts).
 - `python3 scripts/check-site.py`: validates every HTML page (lang, title, viewport, description, local links) and the Firebase JSON config.
-- `python3 scripts/check-books.py`: syntax-checks `books/scripts/*.py` and sanity-checks `books/prompts/manifest-v2.csv`. CI runs both.
+- `python3 scripts/check-books.py`: syntax-checks `books/scripts/*.py` and sanity-checks `books/prompts/manifest-v2.csv` when present locally. CI runs both.
 - `firebase emulators:start --only hosting`: preview `website/dist/` locally (localhost is never gated).
 - `gitleaks detect --source . --config .gitleaks.toml --redact`: secret scan.
 
@@ -16,6 +16,7 @@ Children's coloring-book imprint of Nelson Grey LLC (ages 5–9), **live since 2
 - `brand/`, `docs/`: logos and mascot, business plan, name screening, marketing, product development.
 
 ## Rules that must keep holding
+- **The repo is public: protect IP.** Never commit book content (page prompts/manifests, subject lists, facts, art, print masters, PDFs), the business plan, or unreleased series (Cloverleaf Crew, Woodland, `docs/product-development/`, `output/`, `marketing/`, `tmp/`). They are gitignored and live locally only. Before any `git add`, check `git status` for these paths; never `git add -A` blindly or push `--all`/`--mirror`.
 - Flow is `feature/*` → `develop` → `staging` → `main`. Never push or open a PR to `main`, and never deploy to prod, unless the user explicitly says to. Prod is **live**: `SHOW_COMING_SOON` in the `production` GitHub Environment is `false`; setting it back to `true` rolls prod back to the coming-soon page. Any push to `main` changes the public site. Keep "Automatically delete head branches" off in the repo settings (it once deleted `staging`). Launch status and follow-ups are in `docs/launch/LAUNCH-STATUS.md`.
 - Use only the name **Acornoodle Books**; earlier working names are retired. Legal and publisher-facing copy says "an imprint of Nelson Grey LLC".
 - This is a children's publisher: no data collection, forms, or accounts on the website, and no personal information about children anywhere. Check facts in books before they enter the prompt manifest.
